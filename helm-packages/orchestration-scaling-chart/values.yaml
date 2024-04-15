@@ -1,0 +1,62 @@
+helloService:
+  replicaCount: 2
+  image:
+    repository: public.ecr.aws/t5n9y4h0/suri-simple-mern-be-micro-hello-service
+    pullPolicy: Always    
+    tag: "17"
+  
+  service:
+    type: LoadBalancer
+    port: 80
+    targetPort: 3001
+
+profileService:
+  replicaCount: 2
+  image:
+    repository: public.ecr.aws/t5n9y4h0/suri-simple-mern-be-micro-profile-service
+    pullPolicy: Always    
+    tag: "17"
+
+  service:
+    type: LoadBalancer
+    port: 80
+    targetPort: 3002
+
+frontend:
+  replicaCount: 1
+  image:
+    repository: public.ecr.aws/t5n9y4h0/suri-simple-mern-fe
+    pullPolicy: Always    
+    tag: "17"
+  
+  service:
+    type: LoadBalancer
+    port: 80
+    targetPort: 3000
+
+ingress:
+  enabled: true
+  hosts:
+    - host: cloudcrypto.in
+      paths:
+        - path: /hello
+          pathType: Prefix
+          backend:
+            service:
+              name: hello-service
+              port:
+                number: 80
+        - path: /profile
+          pathType: Prefix
+          backend:
+            service:
+              name: profile-service
+              port:
+                number: 80
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: frontend
+              port:
+                number: 80

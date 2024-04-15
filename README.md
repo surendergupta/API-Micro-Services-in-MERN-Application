@@ -174,13 +174,13 @@ docker run -dp 3000:3000 simple_mearn_micro_fe
 
 ```
 
-![alt text](./screenshots/image.png)
+![alt text](./capture-images/image.png)
 
-![alt text](./screenshots/image-1.png)
+![alt text](./capture-images/image-1.png)
 
-![alt text](./screenshots/image-2.png)
+![alt text](./capture-images/image-2.png)
 
-![alt text](./screenshots/image-3.png)
+![alt text](./capture-images/image-3.png)
 
 
 - Docker Container Stop and Remove
@@ -192,7 +192,7 @@ docker rm d815e1c39071 7cdc746c44ee 4d9aa90ad51f
 
 ```
 
-![alt text](./screenshots/image-4.png)
+![alt text](./capture-images/image-4.png)
 
 - Push Docker Images to Amazon ECR:
 
@@ -225,40 +225,40 @@ docker push public.ecr.aws/t5n9y4h0/suri-simple-mern-be-micro-profile-service:la
 - Now login again in docker and then `aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/s7f2n3x3` run it.
 
 
-![alt text](./screenshots/image-5.png)
+![alt text](./capture-images/image-5.png)
 
-![alt text](./screenshots/image-6.png)
+![alt text](./capture-images/image-6.png)
 
-![alt text](./screenshots/image-7.png)
+![alt text](./capture-images/image-7.png)
 
 3. Version Control
 - Create a CodeCommit repository
 
-![alt text](./screenshots/image-8.png)
+![alt text](./capture-images/image-8.png)
 
-![alt text](./screenshots/image-9.png)
+![alt text](./capture-images/image-9.png)
 
-![alt text](./screenshots/image-10.png)
+![alt text](./capture-images/image-10.png)
 
 - Create User IAM Permission ADD Policy
 
-![alt text](./screenshots/image-11.png)
+![alt text](./capture-images/image-11.png)
 
 - Click on Add Permission
 
-![alt text](./screenshots/image-12.png)
+![alt text](./capture-images/image-12.png)
 
 - I am already Attched Policy for my User
 
-![alt text](./screenshots/image-13.png)
+![alt text](./capture-images/image-13.png)
 
 - Click on right side Quick Link -> My security credentials
 
-![alt text](./screenshots/image-14.png)
+![alt text](./capture-images/image-14.png)
 
 - Under the AWS CodeCommit Credentials -> HTTPS Git credentials for AWS CodeCommit -> Generate Credentials -> Download Creditial -> DONE
 
-![alt text](./screenshots/image-15.png)
+![alt text](./capture-images/image-15.png)
 
 - Push code to AWS CodeCommit
 
@@ -271,7 +271,7 @@ git push codecommit main <Ask username and password above we download after poli
 
 ```
 
-![alt text](./screenshots/image-16.png)
+![alt text](./capture-images/image-16.png)
 
 4. Create EC2 Instance and install java jdk, docker, jenkins
 
@@ -310,7 +310,7 @@ sudo chmod 666 /var/run/docker.sock
 ```
 
 - Enable Port 8080 in Ec2 Security Group
-![add 8080 port on EC2 Jenkins Instance](./screenshots/image-17.png)
+![add 8080 port on EC2 Jenkins Instance](./capture-images/image-17.png)
 
 - Open EC2 <Instance_public_ip>:8080 on browser
 
@@ -338,7 +338,7 @@ sudo cat /var/lib/jenkins/secrets/initialAdminPassword
   - Docker
   - AWS CodeCommit
 
-![Credentials](./screenshots/image-18.png)
+![Credentials](./capture-images/image-18.png)
 
 - Create New Job of Pipeline with name of SampleMERNwithMicroservices
 - Under the Pipeline below code :
@@ -348,12 +348,13 @@ pipeline {
     agent any
     
     environment {
+        DOCKER_HUB_KEY = credentials('docker')
         DOCKER_IMAGE_FRONTEND = 'public.ecr.aws/t5n9y4h0/suri-simple-mern-fe'
         DOCKER_IMAGE_BACKEND_S1 = 'public.ecr.aws/t5n9y4h0/suri-simple-mern-be-micro-hello-service'
-        DOCKER_IMAGE_BACKEND_S2 = 'public.ecr.aws/t5n9y4h0/suri-simple-mern-be-micro-profile-service'        
-        AWS_DEFAULT_REGION="us-east-1"         
+        DOCKER_IMAGE_BACKEND_S2 = 'public.ecr.aws/t5n9y4h0/suri-simple-mern-be-micro-profile-service'
+        AWS_DEFAULT_REGION="us-east-1"
         AWS_CODE_COMMIT_URL = 'https://git-codecommit.us-east-1.amazonaws.com/v1/repos/sample-mern-with-microservices'
-        AWS_CODE_COMMIT_BRANCH = 'master'        
+        AWS_CODE_COMMIT_BRANCH = 'master'
     }
     
     stages {
@@ -395,7 +396,6 @@ pipeline {
                     steps {
                         script {
                             dockerImage = docker.build("${env.DOCKER_IMAGE_FRONTEND}:${env.BUILD_ID}", "./frontend")
-                            // sh "docker tag ${env.DOCKER_IMAGE_FRONTEND}:${IMAGE_TAG} ${env.DOCKER_IMAGE_FRONTEND}:${env.BUILD_ID}"
                             sh "docker push ${env.DOCKER_IMAGE_FRONTEND}:${env.BUILD_ID}"
                         }
                     }
@@ -404,13 +404,12 @@ pipeline {
         }
     }
 }
-
 ```
 
 - Apply and Save It.
 - Click on Build Now
 
-![Pipeline Result](./screenshots/image-19.png)
+![Pipeline Result](./capture-images/image-19.png)
 
 - Trigger the Jenkins jobs whenever there's a new commit in the CodeCommit repository
 - Add Policy of Jenins User using IAM 
@@ -418,42 +417,116 @@ pipeline {
   - AmazonSQSFullAccess
   - AWSAppRunnerServicePolicyForECRAccess
 
-  ![alt text](./screenshots/image-21.png)
+  ![alt text](./capture-images/image-21.png)
 
 - Create SNS Topic
 
-![alt text](./screenshots/image-23.png)
+![alt text](./capture-images/image-23.png)
 
 - Create SQS Queues Set Name and Everything Default
 
-![alt text](./screenshots/image-22.png)
+![alt text](./capture-images/image-22.png)
 
 - Create Subscription of SNS TOPIC created earlier
 
-![alt text](./screenshots/image-24.png)
+![alt text](./capture-images/image-24.png)
 
 - Subscribe to AMAZONE SNS Topic
 
-![alt text](./screenshots/image-25.png)
+![alt text](./capture-images/image-25.png)
 
 - After Subscribe to AMAZONE SNS Topic Status Confirmed
 
-![alt text](./screenshots/image-26.png)
+![alt text](./capture-images/image-26.png)
 
 - Create Trigger
 
-![alt text](./screenshots/image-20.png)
+![alt text](./capture-images/image-20.png)
 
-![alt text](./screenshots/image-27.png)
+![alt text](./capture-images/image-27.png)
+
+![alt text](./capture-images/image-28.png)
 
 - Now back to Jenkins 
   - Dashboard -> SampleMERNwithMicroservices -> Configuration
   - Setup below
-![alt text](./screenshots/image-28.png)
+![alt text](./capture-images/image-29.png)
 
 - Webhook AWS CodeCommit Complete Through SNS and SQS
 - Now whenever we push code to CodeCommit Auto Jenkins Pipeline executed
 
+5. Infrastructure as Code (IaC) with Boto3 | Deploying Backend Services
 
+- Infra Structure and ASG Group using Boto 3 files location ./boto3/infra.py
 
+```
+VPC created with ID: vpc-0f29f8a2d5f55f513
+Subnets created: ['subnet-0867e4b8a4ecf26f8', 'subnet-0db60c3d3efc51a9f', 'subnet-042248a77ac7cf215']
+Route Table created with ID: rtb-06f8c1722ea655f78
+Subnet attached to route table.
+Internet Gateway created with ID: igw-03fbb1b4ef5ffa9bf
+Internet Gateway attached to VPC
+Route added to the route table pointing to the internet gateway.
+Security group ID:  sg-00f0ad424716607b9
+Inbound rules for ports 80, 443, 22, 3001, and 3002 added to the security group.
+Key pair 'orchestration-scaling-key-2068' created successfully.
+Private key saved to orchestration-scaling-key-2068.pem
+EC2 orchestration-scaling-be-hello-service instance id "i-05f1e0f8a627e6732" launched successfully.
+EC2 orchestration-scaling-be-profile-service instance id "i-0b8c80f22e125778d" launched successfully.
+Instance s1 i-05f1e0f8a627e6732 is now running of ip 3.238.34.198.
+Instance s2 i-0b8c80f22e125778d is now running of ip 3.237.171.56.
+Load Balancer S1: arn:aws:elasticloadbalancing:us-east-1:060095847722:loadbalancer/app/orchestration-scaling-s1-lb/87657fe181afab63     
+Load Balancer S2: arn:aws:elasticloadbalancing:us-east-1:060095847722:loadbalancer/app/orchestration-scaling-s2-lb/33c455ba5d2bd640     
+Launch template created successfully. {'LaunchTemplate': {'LaunchTemplateId': 'lt-012dd9664852642af', 'LaunchTemplateName': 'orchestration-scaling-2068-lt', 'CreateTime': datetime.datetime(2024, 4, 15, 5, 1, 50, tzinfo=tzutc()), 'CreatedBy': 'arn:aws:iam::060095847722:user/alex', 'DefaultVersionNumber': 1, 'LatestVersionNumber': 1}, 'ResponseMetadata': {'RequestId': '6a41e187-7775-4036-9899-54b9f7bbb056', 'HTTPStatusCode': 200, 'HTTPHeaders': {'x-amzn-requestid': '6a41e187-7775-4036-9899-54b9f7bbb056', 'cache-control': 'no-cache, no-store', 'strict-transport-security': 'max-age=31536000; includeSubDomains', 'vary': 'accept-encoding', 'content-type': 'text/xml;charset=UTF-8', 'transfer-encoding': 'chunked', 'date': 'Mon, 15 Apr 2024 05:01:50 GMT', 'server': 'AmazonEC2'}, 'RetryAttempts': 0}}
+Auto Scaling Group S1: {'ResponseMetadata': {'RequestId': '8209edb1-fb82-41b1-a492-f8e4082ccd8f', 'HTTPStatusCode': 200, 'HTTPHeaders': {'x-amzn-requestid': '8209edb1-fb82-41b1-a492-f8e4082ccd8f', 'content-type': 'text/xml', 'content-length': '231', 'date': 'Mon, 15 Apr 2024 05:01:52 GMT'}, 'RetryAttempts': 0}}
+Auto Scaling Group S2: {'ResponseMetadata': {'RequestId': '48bfd26e-a505-40fc-9a34-51dd7ba5ed2c', 'HTTPStatusCode': 200, 'HTTPHeaders': {'x-amzn-requestid': '48bfd26e-a505-40fc-9a34-51dd7ba5ed2c', 'content-type': 'text/xml', 'content-length': '231', 'date': 'Mon, 15 Apr 2024 05:01:53 GMT'}, 'RetryAttempts': 0}}
+EC2 instances created
 
+```
+6. Set Up Networking
+
+- Setup cloudflare domain cloudcrypto.in
+
+- Using Boto3 Application Load Balancer DNS confiure in cloudflare
+
+![alt text](./capture-images/image-30.png)
+
+![alt text](./capture-images/image-31.png)
+
+![alt text](./capture-images/image-32.png)
+
+- Receive in Domain DNS for api service url
+    - http://hello-service.cloudcrypto.in/
+    - http://profile-service.cloudcrypto.in/
+
+7. Deploying Frontend Services
+
+- Infra Structure and ASG Group using Boto 3 files location ./boto3/frontend.py
+
+![alt text](./capture-images/image-33.png)
+
+8. Create AWS Lambda Deployment
+    - create AWS Lambda functions for specific tasks within the application
+    - Backup of Db using Lambda Functions and store in S3 bucket - put time stamping on the backup
+
+9. Kubernetes (EKS) Deployment
+    - Create EKS Cluster
+
+```
+eksctl create cluster --name orchestration-scaling-cluster --region us-east-1 --nodegroup-name standard-workers --node-type t2.micro --nodes 2 --nodes-min 1 --nodes-max 3
+
+```
+    - craete folder helm-packages in root directory
+    - Deploy Application with Helm
+
+```
+aws eks --region us-east-1 update-kubeconfig --name orchestration-scaling-cluster
+helm upgrade --install --set image.tag=17 orchestration-scaling-chart ./helm-packages/orchestration-scaling-chart
+```
+
+10. Monitoring and Logging
+    - Set Up CloudWatch for monitoring and setting up alarms
+    - CloudWatch Logs or another logging solution for collecting logs
+
+11. ChatOps Integration
+    - Integrate ChatOps with Messaging Platform (Slack)

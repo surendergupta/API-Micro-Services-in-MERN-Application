@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "orchestration-scaling-chart.fullname" . }}
+spec:
+  replicas: {{ .Values.profileService.replicaCount }}
+  selector:
+    matchLabels:
+      app: profile-service
+  template:
+    metadata:
+      labels:
+        app: profile-service
+    spec:
+      containers:
+      - name: profile-service
+        image: "{{ .Values.profileService.image.repository }}:{{ .Values.profileService.image.tag }}"
+        imagePullPolicy: {{ .Values.profileService.image.pullPolicy }}
+        ports:
+        - containerPort: {{ .Values.profileService.service.targetPort }}
+          protocol: TCP

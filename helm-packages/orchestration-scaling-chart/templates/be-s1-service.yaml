@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "orchestration-scaling-chart.fullname" . }}
+spec:
+  type: {{ .Values.helloService.service.type }}
+  selector:
+    app: hello-service
+  ports:
+  - port: {{ .Values.helloService.service.port }}
+    targetPort: {{ .Values.helloService.service.targetPort }}

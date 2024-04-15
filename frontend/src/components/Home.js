@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+const helloServiceUrl = process.env.REACT_APP_SERVICE1_URL;
+const profileServiceUrl = process.env.REACT_APP_SERVICE2_URL;
 
 function Home() {
   const [message, setMessage] = useState("");
@@ -7,7 +9,7 @@ function Home() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3001/")
+      .get(helloServiceUrl)
       .then((response) => {
         setMessage(response.data.msg);
       })
@@ -16,7 +18,7 @@ function Home() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3002/fetchUser")
+      .get(`${profileServiceUrl}fetchUser`)
       .then((response) => {
         setProfile(response.data);
         
@@ -35,7 +37,7 @@ function Home() {
         profile.map((user) => {
             console.log('user', user)
           return (
-            <div>
+            <div key={user._id}>
               <h3>Name: {user.name}</h3>
               <h3>Age: {user.age}</h3>
             </div>
