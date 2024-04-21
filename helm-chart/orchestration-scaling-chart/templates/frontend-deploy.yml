@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "orchestration-scaling-chart.fullname" . }}-frontend-pod
+spec:
+  replicas: {{ .Values.frontend.replicas }}
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - name: frontend
+          image: "{{ .Values.frontend.image }}"
+          imagePullPolicy: Always
+          ports:
+            - containerPort: {{ .Values.frontend.port }}
+              protocol: TCP
+          env:
+            - name: PORT
+              value: "{{ .Values.frontend.port }}"
+            - name: REACT_APP_SERVICE1_URL
+              value: "{{ .Values.frontend.service1URL }}"
+            - name: REACT_APP_SERVICE2_URL
+              value: "{{ .Values.frontend.service2URL }}"

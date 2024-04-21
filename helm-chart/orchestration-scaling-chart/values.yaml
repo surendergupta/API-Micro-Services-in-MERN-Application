@@ -1,0 +1,17 @@
+helloService:
+  replicas: 1
+  image: "public.ecr.aws/t5n9y4h0/suri-simple-mern-be-micro-hello-service:latest"
+  port: 3001
+
+profileService:
+  replicas: 1
+  image: "public.ecr.aws/t5n9y4h0/suri-simple-mern-be-micro-profile-service:latest"
+  port: 3002
+  mongoURL: "mongodb+srv://surendergupta:abcd4321A@cluster0.tyk2d2k.mongodb.net/SimpleMicroService"
+
+frontend:
+  replicas: 1
+  image: "public.ecr.aws/t5n9y4h0/suri-simple-mern-fe:latest"
+  port: 3000
+  service1URL: "http://hello.cloudcrypto.in/"
+  service2URL: "http://profile.cloudcrypto.in/"

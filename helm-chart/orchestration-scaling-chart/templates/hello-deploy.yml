@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "orchestration-scaling-chart.fullname" . }}-hello-service-pod
+spec:
+  replicas: {{ .Values.helloService.replicas }}
+  selector:
+    matchLabels:
+      app: hello-service
+  template:
+    metadata:
+      labels:
+        app: hello-service
+    spec:
+      containers:
+        - name: hello-service
+          image: "{{ .Values.helloService.image }}"
+          imagePullPolicy: Always
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: {{ .Values.helloService.port }}
+              protocol: TCP
+          env:
+            - name: PORT
+              value: "{{ .Values.helloService.port }}"

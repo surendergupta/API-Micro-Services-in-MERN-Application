@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-pod
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - name: frontend
+          image: "public.ecr.aws/t5n9y4h0/suri-simple-mern-fe:latest"
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+              protocol: TCP
+          env:
+            - name: PORT
+              value: "3000"
+            - name: REACT_APP_SERVICE1_URL
+              value: "http://a198470f4bae04194820e033807e25d8-285141723.us-east-1.elb.amazonaws.com/"
+            - name: REACT_APP_SERVICE2_URL
+              value: "http://a1fbf6b9484ba44d2af53f391af0f28a-1021621992.us-east-1.elb.amazonaws.com/"
+          

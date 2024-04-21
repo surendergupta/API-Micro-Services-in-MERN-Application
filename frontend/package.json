@@ -1,17 +1,7 @@
 {
   "name": "frontend",
   "version": "0.1.0",
-  "private": true,
-  "proxy": {
-    "/profile": {
-      "target": "http://profile-service.cloudcrypto.in",
-      "changeOrigin": true
-    },
-    "/hello": {
-      "target": "http://hello-service.cloudcrypto.in",
-      "changeOrigin": true
-    }
-  },
+  "private": true,  
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",

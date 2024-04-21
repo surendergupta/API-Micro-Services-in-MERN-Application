@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "orchestration-scaling-chart.fullname" . }}-profile-service-svc
+spec:
+  type: LoadBalancer
+  selector:
+    app: profile-service
+  ports:
+    - port: 80
+      targetPort: {{ .Values.profileService.port }}

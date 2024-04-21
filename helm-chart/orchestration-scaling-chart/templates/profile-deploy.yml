@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "orchestration-scaling-chart.fullname" . }}-profile-service-svc
+spec:
+  replicas: {{ .Values.profileService.replicas }}
+  selector:
+    matchLabels:
+      app: profile-service
+  template:
+    metadata:
+      labels:
+        app: profile-service
+    spec:
+      containers:
+        - name: profile-service
+          image: "{{ .Values.profileService.image }}"
+          imagePullPolicy: Always
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: {{ .Values.profileService.port }}
+              protocol: TCP
+          env:
+            - name: PORT
+              value: "{{ .Values.profileService.port }}"
+            - name: MONGO_URL
+              value: "{{ .Values.profileService.mongoURL }}"

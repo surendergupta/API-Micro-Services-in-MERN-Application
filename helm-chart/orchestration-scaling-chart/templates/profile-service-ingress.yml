@@ -1,0 +1,16 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "orchestration-scaling-chart.fullname" . }}-profile-ingress
+spec:
+  rules:
+    - host: profile.cloudcrypto.in
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "orchestration-scaling-chart.fullname" . }}-profile-service
+                port:
+                  number: 80

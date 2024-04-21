@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "orchestration-scaling-chart.fullname" . }}-hello-service-svc
+spec:
+  type: LoadBalancer
+  selector:
+    app: hello-service
+  ports:
+    - port: 80
+      targetPort: {{ .Values.helloService.port }}
