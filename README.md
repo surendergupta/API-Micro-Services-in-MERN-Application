@@ -513,7 +513,7 @@ EC2 instances created
     - Create EKS Cluster
 
 ```
-eksctl create cluster --name orchestration-scaling-cluster --region us-east-1 --nodegroup-name standard-workers --node-type t2.micro --nodes 2 --nodes-min 1 --nodes-max 3
+eksctl create cluster --name orchestration-scaling-cluster --region us-east-1 --nodegroup-name standard-workers --node-type t2.micro --nodes 4 --nodes-min 3 --nodes-max 12
 
 ```
     - craete folder helm-packages in root directory
@@ -521,12 +521,35 @@ eksctl create cluster --name orchestration-scaling-cluster --region us-east-1 --
 
 ```
 aws eks --region us-east-1 update-kubeconfig --name orchestration-scaling-cluster
-helm upgrade --install --set image.tag=17 orchestration-scaling-chart ./helm-packages/orchestration-scaling-chart
+helm install orchestration-scaling-chart .\helm-chart\orchestration-scaling-chart\
 ```
+![alt text](./capture-images/image-34.png)
+
+![alt text](./capture-images/image-35.png)
+
+![alt text](./capture-images/image-39.png)
+
+![alt text](./capture-images/image-36.png)
+
+![alt text](./capture-images/image-37.png)
+
+![alt text](./capture-images/image-38.png)
+
+
+![alt text](./capture-images/image-40.png)
+
+![alt text](./capture-images/image-41.png)
 
 10. Monitoring and Logging
     - Set Up CloudWatch for monitoring and setting up alarms
     - CloudWatch Logs or another logging solution for collecting logs
 
+![alt text](./capture-images/image-42.png)
+
+![alt text](./capture-images/image-43.png)
+
+![alt text](./capture-images/image-44.png)
+
 11. ChatOps Integration
     - Integrate ChatOps with Messaging Platform (Slack)
+    
