@@ -352,9 +352,13 @@ pipeline {
         DOCKER_IMAGE_FRONTEND = 'public.ecr.aws/t5n9y4h0/suri-simple-mern-fe'
         DOCKER_IMAGE_BACKEND_S1 = 'public.ecr.aws/t5n9y4h0/suri-simple-mern-be-micro-hello-service'
         DOCKER_IMAGE_BACKEND_S2 = 'public.ecr.aws/t5n9y4h0/suri-simple-mern-be-micro-profile-service'
-        AWS_DEFAULT_REGION="us-east-1"
+        DOCKER_CUSTUM_BUILD = 'latest'
+        AWS_DEFAULT_REGION = 'us-east-1'
+        
         AWS_CODE_COMMIT_URL = 'https://git-codecommit.us-east-1.amazonaws.com/v1/repos/sample-mern-with-microservices'
         AWS_CODE_COMMIT_BRANCH = 'master'
+        
+        
     }
     
     stages {
@@ -369,7 +373,7 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'docker', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                     sh "echo -n ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USERNAME} --password-stdin"
                 }
-                withCredentials([aws(credentialsId: 'aws-config', region: env.AWS_REGION )]) {
+                withCredentials([aws(credentialsId: 'aws-config', region: env.AWS_DEFAULT_REGION )]) {
                     sh 'aws ecr-public get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin public.ecr.aws/t5n9y4h0'
                 }
             }
@@ -379,24 +383,24 @@ pipeline {
                 stage('build backend hello service image') {
                     steps {
                         script {
-                            dockerImage = docker.build("${env.DOCKER_IMAGE_BACKEND_S1}:${env.BUILD_ID}", "./backend/helloService")
-                            sh "docker push ${env.DOCKER_IMAGE_BACKEND_S1}:${env.BUILD_ID}"
+                            dockerImage = docker.build("${env.DOCKER_IMAGE_BACKEND_S1}:${env.DOCKER_CUSTUM_BUILD}", "./backend/helloService")
+                            sh "docker push ${env.DOCKER_IMAGE_BACKEND_S1}:${env.DOCKER_CUSTUM_BUILD}"
                         }
                     }
                 }
                 stage('build backend profile service image') {
                     steps {
                         script {
-                            dockerImage = docker.build("${env.DOCKER_IMAGE_BACKEND_S2}:${env.BUILD_ID}", "./backend/profileService")
-                            sh "docker push ${env.DOCKER_IMAGE_BACKEND_S2}:${env.BUILD_ID}"
+                            dockerImage = docker.build("${env.DOCKER_IMAGE_BACKEND_S2}:${env.DOCKER_CUSTUM_BUILD}", "./backend/profileService")
+                            sh "docker push ${env.DOCKER_IMAGE_BACKEND_S2}:${env.DOCKER_CUSTUM_BUILD}"
                         }
                     }
                 }
                 stage('build frontend image') {
                     steps {
                         script {
-                            dockerImage = docker.build("${env.DOCKER_IMAGE_FRONTEND}:${env.BUILD_ID}", "./frontend")
-                            sh "docker push ${env.DOCKER_IMAGE_FRONTEND}:${env.BUILD_ID}"
+                            dockerImage = docker.build("${env.DOCKER_IMAGE_FRONTEND}:${env.DOCKER_CUSTUM_BUILD}", "./frontend")
+                            sh "docker push ${env.DOCKER_IMAGE_FRONTEND}:${env.DOCKER_CUSTUM_BUILD}"
                         }
                     }
                 }
