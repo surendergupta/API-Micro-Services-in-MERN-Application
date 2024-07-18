@@ -1,4 +1,4 @@
-# SampleMERNwithMicroservices
+# MERN with Microservices
 
 ## Git fork and clone
 
